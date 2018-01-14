@@ -6,22 +6,54 @@ from keras.layers import Dense, Flatten
 from keras.callbacks import TensorBoard, EarlyStopping
 from keras.optimizers import SGD
 from keras.initializers import Constant
+from keras.regularizers import l2
 import keras.backend as K
-import pickle
-import time
+import pickle, time, sys
+from random import randint
 from copy import deepcopy
 from shutil import copy
 
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Inputs for MLP3 variants.')
+parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
+parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
+parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
+parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
+
+args = parser.parse_args()
+
+filename = "cifar10_keras_mlp3.b{}".format(args.batch_size)
+if args.regularize:
+    filename+=".wd"
+if args.random:
+    filename+=".rand{}".format(args.random)
+
+print(filename)
+
 model = Sequential()
 model.add(Flatten(input_shape=(28, 28, 3)))
-model.add(Dense(512, kernel_initializer='glorot_normal',
-                bias_initializer=Constant(0.1), activation='relu'))
-model.add(Dense(512, kernel_initializer='glorot_normal',
-                bias_initializer=Constant(0.1), activation='relu'))
-model.add(Dense(512, kernel_initializer='glorot_normal',
-                bias_initializer=Constant(0.1), activation='relu'))
+
+if (args.regularize):
+    model.add(Dense(512, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+                    bias_initializer=Constant(0.1), activation='relu'))
+    model.add(Dense(512, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+                    bias_initializer=Constant(0.1), activation='relu'))
+    model.add(Dense(512, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+                    bias_initializer=Constant(0.1), activation='relu'))
+else:
+    model.add(Dense(512, kernel_initializer='glorot_normal',
+                    bias_initializer=Constant(0.1), activation='relu'))
+    model.add(Dense(512, kernel_initializer='glorot_normal',
+                    bias_initializer=Constant(0.1), activation='relu'))
+    model.add(Dense(512, kernel_initializer='glorot_normal',
+                    bias_initializer=Constant(0.1), activation='relu'))
 model.add(Dense(10, kernel_initializer='glorot_normal',
                 bias_initializer=Constant(0.1), activation='softmax'))
+
+
+print(model.summary())
 
 early_stop = EarlyStopping(monitor='loss', min_delta=0.0001, patience=5)
 now = str(time.time())
@@ -54,6 +86,9 @@ for i in range(1, 6):
         image = norm_image.eval(feed_dict={img:image})
         cifar10_train_images.append(image)
         label = np.identity(10)[label]
+        if args.random > 0:
+            if randint(0,100)<=args.random:
+                label = np.identity(10)[randint(0, 9)]
         cifar10_train_labels.append(label)
     train_file.close()
 
@@ -102,9 +137,5 @@ test_file.close()
 print(model.evaluate(np.array(cifar10_test_images),
                      np.array(cifar10_test_labels), batch_size=256))
 
-response = raw_input("Do you want to save this model? (Y/n): ")
-if response.lower() not in ['n', 'no', 'nah', 'nein', 'nahi', 'nope']:
-    model.save('cifar10_mlp3.h5')
-    copy('./cifar10_keras_mlp3.py', '../Tensorboard/mlp3/' + now)
-    print "Model saved"
+model.save("{}.final.h5".format(filename))
 
