@@ -1,4 +1,4 @@
-#!/bin/python2
+#!/usr/bin/env python2
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
@@ -24,7 +24,7 @@ parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels
 
 args = parser.parse_args()
 
-filename = "cifar10_keras_mlp3.b{}".format(args.batch_size)
+filename = "weights/model.b{}".format(args.batch_size,args.random)
 if args.regularize:
     filename+=".wd"
 if args.random:
@@ -92,16 +92,19 @@ for i in range(1, 6):
         cifar10_train_labels.append(label)
     train_file.close()
 
-epochs = 100
+epochs =100 # args.epochs
 batch_size = 16
 
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
+
+model.save("{}.e{}.h5".format(filename,0))
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
                      cifar10_train_labels), epochs=(epoch + 1),
                      batch_size=batch_size, initial_epoch=epoch,
                      callbacks=[tb_callback])
+    model.save("{}.e{}.h5".format(filename,epoch))
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
         patience -= 1
@@ -138,4 +141,5 @@ print(model.evaluate(np.array(cifar10_test_images),
                      np.array(cifar10_test_labels), batch_size=256))
 
 model.save("{}.final.h5".format(filename))
+
 
