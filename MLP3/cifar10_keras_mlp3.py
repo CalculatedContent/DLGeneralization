@@ -27,7 +27,7 @@ args = parser.parse_args()
 filename = "weights/model.b{}".format(args.batch_size,args.random)
 if args.regularize:
     filename+=".wd"
-if args.random:
+if args.random > 0:
     filename+=".rand{}".format(args.random)
 
 print(filename)
@@ -85,10 +85,12 @@ for i in range(1, 6):
         image = np.concatenate([image_red, image_green, image_blue], axis=-1)
         image = norm_image.eval(feed_dict={img:image})
         cifar10_train_images.append(image)
+
         label = np.identity(10)[label]
         if args.random > 0:
-            if randint(0,100)<=args.random:
+            if randint(0,100) < args.random:
                 label = np.identity(10)[randint(0, 9)]
+            
         cifar10_train_labels.append(label)
     train_file.close()
 
