@@ -72,11 +72,13 @@ batch_size = 16
 
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
+model.save("cifar10_alexnet.{}.h5".format(0))
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
                      cifar10_train_labels), epochs=(epoch + 1),
                      batch_size=batch_size, initial_epoch=epoch,
                      callbacks=[tb_callback])
+    model.save("cifar10_alexnet.{}.h5".format(epoch))
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
         patience -= 1
@@ -112,9 +114,7 @@ test_file.close()
 print(model.evaluate(np.array(cifar10_test_images),
     np.array(cifar10_test_labels), batch_size=256))
 
-response = raw_input("Do you want to save this model? (Y/n): ")
-if response.lower() not in ['n', 'no', 'nah', 'nein', 'nahi', 'nope']:
-    model.save('cifar10_alexnet.h5')
-    copy('./cifar10_alexnet.py', '../Tensorboard/alexnet/' + now)
-    print "Model saved"
+model.save("cifar10_alexnet.{}.h5".format("final"))
+
+
 
