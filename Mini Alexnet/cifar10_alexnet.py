@@ -23,7 +23,7 @@ parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels
 
 args = parser.parse_args()
 
-filename = "weights/model.b{}".format(args.batch_size)
+filename = "model.b{}".format(args.batch_size)
 if args.regularize:
         filename+=".wd"
 if args.random > 0:
@@ -95,13 +95,13 @@ batch_size = args.batch_size
 
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
-model.save("{}.{}.h5".format(filename,0))
+model.save("{}.e{}.h5".format(filename,0))
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
                      cifar10_train_labels), epochs=(epoch + 1),
                      batch_size=batch_size, initial_epoch=epoch,
                      callbacks=[tb_callback])
-    model.save("filename.{}.h5".format(filename,epoch))
+    model.save("{}.e{}.h5".format(filename,epoch))
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
         patience -= 1
@@ -137,7 +137,7 @@ test_file.close()
 print(model.evaluate(np.array(cifar10_test_images),
     np.array(cifar10_test_labels), batch_size=256))
 
-model.save("{}.{}.h5".format(filename,"final"))
+model.save("{}.final.h5".format(filename))
 
 
 
