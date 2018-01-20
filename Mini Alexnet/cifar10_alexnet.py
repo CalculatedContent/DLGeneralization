@@ -29,7 +29,7 @@ if args.regularize:
         filename+=".wd"
 if args.random > 0:
     filename+=".rand{}".format(args.random)
-    print(filename)
+print(filename)
 
                 
 
