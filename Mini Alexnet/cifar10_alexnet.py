@@ -10,6 +10,7 @@ from keras.optimizers import SGD
 from keras.initializers import Constant
 import keras.backend as K
 import pickle, time, random
+from random import randint
 from copy import deepcopy
 from shutil import copy
 
