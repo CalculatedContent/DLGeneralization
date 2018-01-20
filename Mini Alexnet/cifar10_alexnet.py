@@ -24,7 +24,7 @@ parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels
 
 args = parser.parse_args()
 
-filename = "model.b{}".format(args.batch_size)
+filename = "models/alexnet.b{}".format(args.batch_size)
 if args.regularize:
         filename+=".wd"
 if args.random > 0:
