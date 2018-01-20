@@ -14,6 +14,25 @@ import time
 from copy import deepcopy
 from shutil import copy
 
+import argparse
+
+parser = argparse.ArgumentParser(description='Inputs for MLP3 variants.')
+parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
+parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
+parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
+parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
+
+args = parser.parse_args()
+
+filename = "weights/model.b{}".format(args.batch_size)
+if args.regularize:
+        filename+=".wd"
+if args.random > 0:
+    filename+=".rand{}".format(args.random)
+    print(filename)
+
+                
+
 model = Sequential()
 model.add(Conv2D(96, (5, 5), input_shape=(28, 28, 3), kernel_initializer=
                  'glorot_normal', bias_initializer=Constant(0.1), padding=
@@ -63,22 +82,27 @@ for i in range(1, 6):
         image = np.concatenate([image_red, image_green, image_blue], axis=-1)
         image = norm_image.eval(feed_dict={img:image})
         cifar10_train_images.append(image)
+        
         label = np.identity(10)[label]
+        if args.random > 0:
+                if randint(0,100) < args.random:
+                        label = np.identity(10)[randint(0, 9)]
+                        
         cifar10_train_labels.append(label)
     train_file.close()
 
-epochs = 1#00
-batch_size = 16
+epochs = 100
+batch_size = args.batch_size
 
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
-model.save("cifar10_alexnet.{}.h5".format(0))
+model.save("{}.{}.h5".format(filename,0))
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
                      cifar10_train_labels), epochs=(epoch + 1),
                      batch_size=batch_size, initial_epoch=epoch,
                      callbacks=[tb_callback])
-    model.save("cifar10_alexnet.{}.h5".format(epoch))
+    model.save("filename.{}.h5".format(filename,epoch))
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
         patience -= 1
@@ -114,7 +138,7 @@ test_file.close()
 print(model.evaluate(np.array(cifar10_test_images),
     np.array(cifar10_test_labels), batch_size=256))
 
-model.save("cifar10_alexnet.{}.h5".format("final"))
+model.save("{}.{}.h5".format(filename,"final"))
 
 
 
