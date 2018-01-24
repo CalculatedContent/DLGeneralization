@@ -22,6 +22,7 @@ parser.add_argument('--regularize', metavar='w', type=bool, default=False, help=
 parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
 parser.add_argument('--id', metavar='i', type=int, default=0, help='id of run')
+parser.add_argument('--save', metavar='s', type=bool, default=False, help='save intermediate model files')
 
 args = parser.parse_args()
 
@@ -100,13 +101,19 @@ batch_size = args.batch_size
 
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
-model.save("{}.e{}.h5".format(filename,0))
+
+if args.save:
+        model.save("{}.e{}.h5".format(filename,0))
+        
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
                      cifar10_train_labels), epochs=(epoch + 1),
                      batch_size=batch_size, initial_epoch=epoch,
                      callbacks=[tb_callback])
-    model.save("{}.e{}.h5".format(filename,epoch))
+
+    if args.save:
+            model.save("{e}.e{}.h5".format(filename,epoch))
+            
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
         patience -= 1
