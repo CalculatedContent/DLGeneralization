@@ -21,14 +21,18 @@ parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='bat
 parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
 parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
+parser.add_argument('--id', metavar='i', type=int, default=0, help='id of run')
 
 args = parser.parse_args()
 
-filename = "models/alexnet.b{}".format(args.batch_size)
+filename = "weights/alexnet.b{}".format(args.batch_size)
 if args.regularize:
         filename+=".wd"
 if args.random > 0:
     filename+=".rand{}".format(args.random)
+if args.id > 0:
+    filename+=".id{}".format(args.id)
+        
 print(filename)
 
                 
