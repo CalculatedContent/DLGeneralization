@@ -110,8 +110,7 @@ batch_size = args.batch_size
 prev_loss = 1e4
 patience = deepcopy(early_stop.patience)
 
-if args.save:
-        model.save("{}.e{}.h5".format(filename,0))
+model.save("{}.e{}.h5".format(filename,0))
         
 for epoch in range(epochs):
     hist = model.fit(np.array(cifar10_train_images), np.array(
