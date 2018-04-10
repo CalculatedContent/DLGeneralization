@@ -15,10 +15,9 @@ import pickle, time, random
 from random import randint
 from copy import deepcopy
 from shutil import copy
-
 import argparse
 
-parser = argparse.ArgumentParser(description='Inputs for MLP3 variants.')
+parser = argparse.ArgumentParser(description='Inputs for Mini AlexNet variants.')
 parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
 parser.add_argument('--long_run', metavar='l', type=bool, default=False, help='long run')
 parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
