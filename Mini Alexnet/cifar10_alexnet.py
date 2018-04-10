@@ -71,8 +71,8 @@ model.add(Dense(10, kernel_initializer='glorot_normal',
 # unless using 75 or more epochs
 min_delta = 0.0001
 prev_loss = 1e4
-epochs = 100:
-if args.long_run True:
+epochs = 100
+if args.long_run is True:
         min_delta = 0.0000001
         prev_loss = 1e10
 early_stop = EarlyStopping(monitor='loss', min_delta=min_delta, patience=5)
