@@ -2,12 +2,13 @@
 
 source activate py27
 
-
+# 100 epochs
 #./cifar10_alexnet.py --save True  > cifar10_alexnet.out
 ./cifar10_alexnet.py --save True --regularize True  > cifar10_alexnet.wd.out
 #./cifar10_alexnet.py --save True --random 100 > cifar10_alexnet.r100.out
 ./cifar10_alexnet.py --save True --random 100 --regularize True > cifar10_alexnet.r100.wd.out
 
+# early stopping
 for id in `seq 1 10`
 do
     ./cifar10_alexnet.py --num_epochs 60  --id $id  --regularize True > cifar10_alexnet.id$id.wd.out
