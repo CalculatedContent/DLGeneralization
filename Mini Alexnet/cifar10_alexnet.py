@@ -8,6 +8,8 @@ from keras.layers.normalization import BatchNormalization
 from keras.callbacks import TensorBoard, EarlyStopping
 from keras.optimizers import SGD
 from keras.initializers import Constant
+from keras import regularizers
+from keras.regularizers import l2
 import keras.backend as K
 import pickle, time, random
 from random import randint
@@ -18,6 +20,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Inputs for MLP3 variants.')
 parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
+parser.add_argument('--long_run', metavar='l', type=bool, default=False, help='long run')
 parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
 parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
@@ -64,8 +67,18 @@ else:
 
 model.add(Dense(10, kernel_initializer='glorot_normal',
         bias_initializer=Constant(0.1), activation='softmax'))
-        
-early_stop = EarlyStopping(monitor='loss', min_delta=0.0001, patience=5)
+
+# use early stopping
+# unless using 75 or more epochs
+min_delta = 0.0001
+prev_loss = 1e4
+epochs = 100:
+if args.long_run True:
+        min_delta = 0.0000001
+        prev_loss = 1e10
+early_stop = EarlyStopping(monitor='loss', min_delta=min_delta, patience=5)
+
+
 now = str(time.time())
 tb_callback = TensorBoard(log_dir='../Tensorboard/alexnet/' + now)
 
@@ -104,10 +117,9 @@ for i in range(1, 6):
         cifar10_train_labels.append(label)
     train_file.close()
 
-epochs = 100
 batch_size = args.batch_size
 
-prev_loss = 1e4
+
 patience = deepcopy(early_stop.patience)
 
 model.save("{}.e{}.h5".format(filename,0))
@@ -119,7 +131,7 @@ for epoch in range(epochs):
                      callbacks=[tb_callback])
 
     if args.save:
-            model.save("{e}.e{}.h5".format(filename,epoch))
+            model.save("{}.e{}.h5".format(filename,epoch))
             
     K.set_value(opt.lr, 0.95 * K.get_value(opt.lr))
     if hist.history[early_stop.monitor][0] - prev_loss > early_stop.min_delta:
@@ -127,7 +139,8 @@ for epoch in range(epochs):
     else:
         patience = deepcopy(early_stop.patience)
     if patience <= 0:
-        break
+        #break
+        prev_loss = hist.history[early_stop.monitor][0]
     else:
         prev_loss = hist.history[early_stop.monitor][0]
 
