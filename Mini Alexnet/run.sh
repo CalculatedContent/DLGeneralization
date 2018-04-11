@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 #!/usr/bin/env bash
 
 source activate py27
@@ -22,5 +20,3 @@ do
 done
 
 
-
->>>>>>> eed10f2df864120237373be9a36eae925acd32ef

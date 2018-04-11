@@ -37,6 +37,7 @@ if args.id > 0:
     filename+=".id{}".format(args.id)
         
 print(filename)
+print(args)
 
                 
 
