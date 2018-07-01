@@ -17,6 +17,8 @@ from copy import deepcopy
 from shutil import copy
 import argparse
 
+from SoftRank import SoftRankRegularizer
+
 parser = argparse.ArgumentParser(description='Inputs for Mini AlexNet variants.')
 parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
 parser.add_argument('--long_run', metavar='l', type=bool, default=False, help='long run')
@@ -44,7 +46,8 @@ print(args)
 model = Sequential()
 model.add(Conv2D(96, (5, 5), input_shape=(28, 28, 3), kernel_initializer=
                  'glorot_normal', bias_initializer=Constant(0.1), padding=
-                 'same', activation='relu')) 
+                 'same', activation='relu',W_regularizer=SoftRankRegularizer(1))) #Applying SoftRank regularization with C=0.01
+ 
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Conv2D(256, (5, 5), kernel_initializer='glorot_normal',
@@ -64,6 +67,8 @@ else:
                         bias_initializer=Constant(0.1), activation='relu'))
         model.add(Dense(192, kernel_initializer='glorot_normal',
                         bias_initializer=Constant(0.1), activation='relu'))
+
+
 
 model.add(Dense(10, kernel_initializer='glorot_normal',
         bias_initializer=Constant(0.1), activation='softmax'))

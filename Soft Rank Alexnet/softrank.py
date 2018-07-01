@@ -23,7 +23,12 @@ class SoftRankRegularizer(Regularizer):
     def __call__(self, loss):
         power = 9  # number of iterations of the power method
         W = self.p
-        WW = K.dot(K.transpose(W), W)
+
+        # Reshape W to 2D, combining 3 smallest dims
+        W_shape_sort = sorted(W.shape.copy())
+        W_rshp = W.reshape((W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W.shape_sort[3]))
+
+        WW = K.dot(K.transpose(W_rshp), W_rshp)
         dim1, dim2 = K.eval(K.shape(WW))
         k = self.k
         o = np.ones(dim1)  # initial values for the dominant eigenvector
