@@ -49,12 +49,12 @@ class SoftRankRegularizer(Regularizer):
         WWd = K.dot(WW, domin_eigenvect)
         domin_eigenval = K.dot(WWd, domin_eigenvect) / K.dot(domin_eigenvect, domin_eigenvect)  # the corresponding dominant eigenvalue
         
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
         # Variance
         # variance = tf.sum(WW) / tf.size(WW)
         variance = tf.reduce_sum(tf.square(WW), keepdims=True) / tf.size(WW,out_type=tf.float32)
-        
+
         # regularized_loss = loss + (variance/domin_eigenval) * self.k
         regularization = (variance/domin_eigenval) * self.k 
         return K.sum(regularization)
