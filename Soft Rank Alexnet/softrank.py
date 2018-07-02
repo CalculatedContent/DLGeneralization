@@ -52,7 +52,7 @@ class SoftRankRegularizer(Regularizer):
         import pdb
         pdb.set_trace()
         # Variance
-        variance, _ = np.linalg.eig(WW)
+        variance = K.sum(WW^2) / K.k_count_params(WW)
 
         # regularized_loss = loss + (variance/domin_eigenval) * self.k
         regularization = (variance/domin_eigenval) * self.k 
