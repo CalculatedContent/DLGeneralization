@@ -23,6 +23,8 @@ class SoftRankRegularizer(Regularizer):
         power = 9  # number of iterations of the power method
         W = x
 
+        import pdb
+        pdb.set_trace()
         # Reshape W to 2D, combining 3 smallest dims
         W_shape_sort = sorted(W.shape)
         W_rshp = W.reshape((W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W.shape_sort[3]))
