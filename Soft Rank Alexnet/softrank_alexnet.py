@@ -52,7 +52,7 @@ model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Conv2D(256, (5, 5), kernel_initializer='glorot_normal',
                  bias_initializer=Constant(0.1), padding='same',
-                 activation='relu')) 
+                 activation='relu',W_regularizer=SoftRankRegularizer(1))) 
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Flatten())
