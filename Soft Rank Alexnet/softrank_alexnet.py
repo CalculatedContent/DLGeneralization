@@ -17,7 +17,7 @@ from copy import deepcopy
 from shutil import copy
 import argparse
 
-from SoftRank import SoftRankRegularizer
+from softrank import SoftRankRegularizer
 
 parser = argparse.ArgumentParser(description='Inputs for Mini AlexNet variants.')
 parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
