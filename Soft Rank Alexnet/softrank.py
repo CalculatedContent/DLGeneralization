@@ -49,8 +49,8 @@ class SoftRankRegularizer(Regularizer):
         WWd = K.dot(WW, domin_eigenvect)
         domin_eigenval = K.dot(WWd, domin_eigenvect) / K.dot(domin_eigenvect, domin_eigenvect)  # the corresponding dominant eigenvalue
         
-        # import pdb
-        # pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         # Variance
         variance = K.sum(WW^2) / K.k_count_params(WW)
 
