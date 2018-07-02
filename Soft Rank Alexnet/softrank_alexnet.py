@@ -27,6 +27,7 @@ parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help=
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
 parser.add_argument('--id', metavar='i', type=int, default=0, help='id of run')
 parser.add_argument('--save', metavar='s', type=bool, default=False, help='save intermediate model files')
+parser.add_argument('--softrank_k', metavar='k', type=bool, default=0.1, help='k value for softrank regularization')
 
 args = parser.parse_args()
 
@@ -46,13 +47,13 @@ print(args)
 model = Sequential()
 model.add(Conv2D(96, (5, 5), input_shape=(28, 28, 3), kernel_initializer=
                  'glorot_normal', bias_initializer=Constant(0.1), padding=
-                 'same', activation='relu',kernel_regularizer=SoftRankRegularizer(0.1))) #Applying SoftRank regularization with C=0.01
+                 'same', activation='relu',kernel_regularizer=SoftRankRegularizer(args.softrank_k))) #Applying SoftRank regularization with C=0.01
  
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Conv2D(256, (5, 5), kernel_initializer='glorot_normal',
                  bias_initializer=Constant(0.1), padding='same',
-                 activation='relu',kernel_regularizer=SoftRankRegularizer(0.1))) 
+                 activation='relu',kernel_regularizer=SoftRankRegularizer(args.softrank_k))) 
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Flatten())
