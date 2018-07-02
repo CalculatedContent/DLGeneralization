@@ -39,7 +39,7 @@ class SoftRankRegularizer(Regularizer):
         dim1, dim2 = K.eval(K.shape(WW))
         k = self.k
         # o = np.ones(dim1)  # initial values for the dominant eigenvector
-        o = K.ones([dim1, 1])
+        o = K.ones([dim1, dim2])
 
         # power method for approximating the dominant eigenvector:
         domin_eigenvect = K.dot(WW, o)
