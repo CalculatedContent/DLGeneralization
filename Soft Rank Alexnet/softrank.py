@@ -52,8 +52,9 @@ class SoftRankRegularizer(Regularizer):
         import pdb
         pdb.set_trace()
         # Variance
-        variance = K.sum(WW^2) / K.k_count_params(WW)
-
+        # variance = tf.sum(WW) / tf.size(WW)
+        variance = tf.reduce_sum(tf.square(WW), keepdims=True) / tf.size(WW,out_type=tf.float32)
+        
         # regularized_loss = loss + (variance/domin_eigenval) * self.k
         regularization = (variance/domin_eigenval) * self.k 
         return K.sum(regularization)
