@@ -59,9 +59,9 @@ model.add(BatchNormalization())
 model.add(Flatten())
 
 if args.regularize:
-        model.add(Dense(384, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+        model.add(Dense(384, kernel_initializer='glorot_normal', kernel_regularizer=SoftRankRegularizer(args.softrank_k),
                 bias_initializer=Constant(0.1), activation='relu'))
-        model.add(Dense(192, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+        model.add(Dense(192, kernel_initializer='glorot_normal', kernel_regularizer=SoftRankRegularizer(args.softrank_k),
                         bias_initializer=Constant(0.1), activation='relu'))
 else:
         model.add(Dense(384, kernel_initializer='glorot_normal',
@@ -78,7 +78,7 @@ model.add(Dense(10, kernel_initializer='glorot_normal',
 # unless using 75 or more epochs
 min_delta = 0.0001
 prev_loss = 1e4
-epochs = 30
+epochs = 100
 if args.long_run is True:
         min_delta = 0.0000001
         prev_loss = 1e10
