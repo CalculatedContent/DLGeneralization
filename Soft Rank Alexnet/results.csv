@@ -1,5 +1,5 @@
 Batch Size	K	Epochs  Train loss  Train Acc   Val Loss    Val Acc
 500	        0.1	100      0.0234     0.8632	    0.0417      0.6984
-500         1
+500         1   100      0.0237     0.8662      0.043       0.6885
 16          0.1
 16          1
