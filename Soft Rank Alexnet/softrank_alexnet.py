@@ -46,13 +46,13 @@ print(args)
 model = Sequential()
 model.add(Conv2D(96, (5, 5), input_shape=(28, 28, 3), kernel_initializer=
                  'glorot_normal', bias_initializer=Constant(0.1), padding=
-                 'same', activation='relu',W_regularizer=SoftRankRegularizer(1))) #Applying SoftRank regularization with C=0.01
+                 'same', activation='relu',kernel_regularizer=SoftRankRegularizer(1))) #Applying SoftRank regularization with C=0.01
  
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Conv2D(256, (5, 5), kernel_initializer='glorot_normal',
                  bias_initializer=Constant(0.1), padding='same',
-                 activation='relu',W_regularizer=SoftRankRegularizer(1))) 
+                 activation='relu',kernel_regularizer=SoftRankRegularizer(1))) 
 model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Flatten())

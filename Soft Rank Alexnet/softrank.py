@@ -13,17 +13,16 @@ class SoftRankRegularizer(Regularizer):
     """
     def __init__(self, k):
         self.k = k
-        self.uses_learning_phase = True
 
 
     def set_param(self, p):
         self.p = p
 
 
-    def __call__(self, loss):
+    def __call__(self, x):
         power = 9  # number of iterations of the power method
-        W = self.p
-
+        W = x
+        
         # Reshape W to 2D, combining 3 smallest dims
         W_shape_sort = sorted(W.shape.copy())
         W_rshp = W.reshape((W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W.shape_sort[3]))
@@ -31,7 +30,8 @@ class SoftRankRegularizer(Regularizer):
         WW = K.dot(K.transpose(W_rshp), W_rshp)
         dim1, dim2 = K.eval(K.shape(WW))
         k = self.k
-        o = np.ones(dim1)  # initial values for the dominant eigenvector
+        # o = np.ones(dim1)  # initial values for the dominant eigenvector
+        o = K.ones([dim1, 1])
 
         # power method for approximating the dominant eigenvector:
         domin_eigenvect = K.dot(WW, o)
@@ -44,8 +44,10 @@ class SoftRankRegularizer(Regularizer):
         # Variance
         variance, _ = np.linalg.eig(WW)
 
-        regularized_loss = loss + (variance/domin_eigenval) * self.k  # multiplied by the given regularization gain
-        return K.in_train_phase(regularized_loss, loss)
+        # regularized_loss = loss + (variance/domin_eigenval) * self.k
+        regularization = (variance/domin_eigenval) * self.k 
+        return K.sum(regularization)
+        # return K.in_train_phase(regularized_loss, loss)
     
 
     def get_config(self):
