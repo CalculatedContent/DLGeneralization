@@ -29,8 +29,11 @@ class SoftRankRegularizer(Regularizer):
         # pdb.set_trace()
 
         # Reshape W to 2D, combining 3 smallest dims
+        print(W.shape)
+        print(W_shape_sort)
         W_shape_sort = sorted(W.shape)
         W_rshp = tf.reshape(W, (W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W_shape_sort[3]))
+        print(W_rshp.shape)
 
         WW = K.dot(K.transpose(W_rshp), W_rshp)
         dim1, dim2 = K.eval(K.shape(WW))
