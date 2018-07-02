@@ -30,7 +30,7 @@ class SoftRankRegularizer(Regularizer):
 
         # Reshape W to 2D, combining 3 smallest dims
         W_shape_sort = sorted(W.shape)
-        W_rshp = Reshape(W, (W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W.shape_sort[3]))
+        W_rshp = Reshape(W, (W_shape_sort[0]*W_shape_sort[1]*W_shape_sort[2],W_shape_sort[3]))
 
         WW = K.dot(K.transpose(W_rshp), W_rshp)
         dim1, dim2 = K.eval(K.shape(WW))
