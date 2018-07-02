@@ -27,7 +27,7 @@ parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help=
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
 parser.add_argument('--id', metavar='i', type=int, default=0, help='id of run')
 parser.add_argument('--save', metavar='s', type=bool, default=False, help='save intermediate model files')
-parser.add_argument('--softrank_k', metavar='k', type=int, default=0.1, help='k value for softrank regularization')
+parser.add_argument('--softrank_k', metavar='k', type=float, default=0.1, help='k value for softrank regularization')
 
 args = parser.parse_args()
 
