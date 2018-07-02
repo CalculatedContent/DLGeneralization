@@ -20,7 +20,7 @@ import argparse
 from softrank import SoftRankRegularizer
 
 parser = argparse.ArgumentParser(description='Inputs for Mini AlexNet variants.')
-parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
+parser.add_argument('--batch_size', metavar='b', type=int, default=500, help='batch size')
 parser.add_argument('--long_run', metavar='l', type=bool, default=False, help='long run')
 parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
 parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
