@@ -32,7 +32,7 @@ filename = "weights/alexnet.b{}".format(args.batch_size)
 reg = 0.0001
 if args.regularize:
 	reg = args.regularize
-        filename+=".wd{}".format(reg)
+	filename+=".wd{}".format(reg)
 if args.random > 0:
     filename+=".rand{}".format(args.random)
 if args.id > 0:
