@@ -1,4 +1,4 @@
-#!/bin/python2
+#!/usr/bin/env python2
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
@@ -28,10 +28,10 @@ model.add(MaxPooling2D((3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Flatten())
 model.add(Dense(384, kernel_initializer='glorot_normal',
-                bias_initializer=Constant(0.1), kernel_regularizer=l2(1e-4),
+                bias_initializer=Constant(0.1), kernel_regularizer=l2(5e-3),
                 activation='relu'))
 model.add(Dense(192, kernel_initializer='glorot_normal',
-                bias_initializer=Constant(0.1), kernel_regularizer=l2(1e-4),
+                bias_initializer=Constant(0.1), 
                 activation='relu'))
 model.add(Dense(10, kernel_initializer='glorot_normal',
                 bias_initializer=Constant(0.1), activation='softmax'))
@@ -70,7 +70,7 @@ for i in range(1, 6):
         cifar10_train_labels.append(label)
     train_file.close()
 
-epochs = 200
+epochs = 20
 batch_size = 16
 
 prev_loss = 1e4
@@ -115,9 +115,5 @@ test_file.close()
 print(model.evaluate(np.array(cifar10_test_images),
                      np.array(cifar10_test_labels), batch_size=256))
 
-response = raw_input("Do you want to save this model? (Y/n): ")
-if response.lower() not in ['n', 'no', 'nah', 'nein', 'nahi', 'nope']:
-    model.save('cifar10_alexnet_wd.h5')
-    copy('./cifar10_alexnet_wd.py', '../Tensorboard/alexnet/' + now)
-    print "Model saved"
+model.save('cifar10_alexnet_wd.h5')
 

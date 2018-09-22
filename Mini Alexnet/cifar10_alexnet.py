@@ -20,7 +20,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Inputs for Mini AlexNet variants.')
 parser.add_argument('--batch_size', metavar='b', type=int, default=16, help='batch size')
 parser.add_argument('--long_run', metavar='l', type=bool, default=False, help='long run')
-parser.add_argument('--regularize', metavar='w', type=bool, default=False, help='weight regularizer')
+parser.add_argument('--regularize', metavar='w', type=float, default=0.0, help='weight regularizer')
 parser.add_argument('--batch_norm', metavar='n', type=bool, default=False, help='batch normalization')
 parser.add_argument('--random', metavar='r', type=int, default=0, help='% labels randomized')
 parser.add_argument('--id', metavar='i', type=int, default=0, help='id of run')
@@ -29,8 +29,10 @@ parser.add_argument('--save', metavar='s', type=bool, default=False, help='save 
 args = parser.parse_args()
 
 filename = "weights/alexnet.b{}".format(args.batch_size)
+reg = 0.0001
 if args.regularize:
-        filename+=".wd"
+	reg = args.regularize
+        filename+=".wd{}".format(reg)
 if args.random > 0:
     filename+=".rand{}".format(args.random)
 if args.id > 0:
@@ -55,9 +57,9 @@ model.add(BatchNormalization())
 model.add(Flatten())
 
 if args.regularize:
-        model.add(Dense(384, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+        model.add(Dense(384, kernel_initializer='glorot_normal', kernel_regularizer=l2(reg),  # modified for rank collapse tests
                 bias_initializer=Constant(0.1), activation='relu'))
-        model.add(Dense(192, kernel_initializer='glorot_normal', kernel_regularizer=l2(1e-4),
+        model.add(Dense(192, kernel_initializer='glorot_normal', #kernel_regularizer=l2(1e-4),
                         bias_initializer=Constant(0.1), activation='relu'))
 else:
         model.add(Dense(384, kernel_initializer='glorot_normal',
